@@ -1,85 +1,204 @@
-# 🪙 Ira — Student P2P Lending Platform
+# Ira 💸
 
-A full-stack peer-to-peer lending platform for college students. Borrow small amounts for emergencies/entertainment, or earn 12–18% returns by lending to peers.
+*A Peer-to-Peer Lending Platform for Students*
 
-## ✨ Features
+## 📌 Overview
 
-- **Vibrant Blue/Green/Red theme** with 15+ CSS @keyframes animations
-- **Custom coin cursor** (₹) that glows green on lending pages, red on borrowing pages
-- **Floating coins animation** on page load
-- **Animated counters** that count up on scroll
-- **Trust score system** (Newbie → Platinum, 5 levels)
-- **Time-based interest slabs** (0% within 24hr, up to 12% at 30 days)
-- **Complete loan lifecycle**: Request → Fund → Repay
-- **85/15 revenue split** between lenders and platform
-- **Penalty interest** for overdue loans
+**Ira** is a full-stack peer-to-peer (P2P) lending platform designed specifically for college students. It enables users to:
 
-## 🚀 Quick Start
+* Borrow small amounts for emergencies or personal needs
+* Lend money to peers and earn attractive returns (12–18%)
+* Build trust through verification and repayment tracking
 
-### Prerequisites
-- Node.js 18+
-- npm
+The platform focuses on simplicity, accessibility, and financial empowerment within student communities.
 
-### 1. Backend Server
-```bash
-cd server
-npm install
-npm run seed     # Create demo data
-npm start        # Starts on http://localhost:5000
-```
+---
 
-### 2. Frontend App
-```bash
-cd frontend
-npm install
-npm run dev      # Starts on http://localhost:3000
-```
+## 🚀 Features
 
-### 3. Open in Browser
-Visit [http://localhost:3000](http://localhost:3000)
+### 🔐 Authentication & Security
 
-## 🔑 Demo Credentials
+* User registration & login
+* Password hashing using `bcryptjs`
+* Authentication middleware for protected routes
 
-All accounts use password: **`demo123`**
+### 💰 Lending & Borrowing
 
-| Email | Name | Trust Level |
-|-------|------|-------------|
-| `raj@college.edu` | Raj Sharma | ⭐⭐ Bronze |
-| `priya@college.edu` | Priya Patel | ⭐⭐⭐⭐ Gold |
-| `arjun@college.edu` | Arjun Kumar | ⭐⭐⭐ Silver |
-| `sneha@college.edu` | Sneha Reddy | ⭐⭐⭐⭐⭐ Platinum |
-| `demo@student.edu` | Demo Student | ⭐ Newbie |
+* Create loan requests
+* Fund loans as a lender
+* Track active and completed loans
 
-## 🏗 Tech Stack
+### 📊 Repayments
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Next.js 15, Tailwind CSS, React |
-| Backend | Express.js, Node.js |
-| Database | SQLite (better-sqlite3) |
-| Auth | JWT (jsonwebtoken), bcryptjs |
+* Structured repayment system
+* Track repayment history
+* Monitor outstanding balances
 
-## 📁 Structure
+### 👤 User Management
+
+* User profiles
+* Borrower/lender activity tracking
+
+### ✅ Verification System
+
+* User verification endpoints
+* Trust-building mechanisms for safer transactions
+
+### 🧾 Interest Handling
+
+* Predefined interest slabs
+* Transparent return calculation
+
+---
+
+## 🏗️ Tech Stack
+
+### Backend
+
+* **Node.js** with **Express.js**
+* **SQLite** (via `better-sqlite3`)
+* RESTful API architecture
+
+### Security
+
+* `bcryptjs` for password hashing
+* CORS-enabled API
+
+---
+
+## 📂 Project Structure
 
 ```
 Ira/
-├── server/              # Express.js backend
-│   ├── db/              # Schema, seed, SQLite database
-│   ├── routes/          # Auth, loans, repayments, users
-│   ├── utils/           # Interest engine, trust scores
-│   └── middleware/      # JWT auth
-├── frontend/            # Next.js frontend
-│   ├── app/             # Pages (landing, login, register, borrower, lender)
-│   ├── components/      # Reusable UI (CoinCursor, FloatingCoins, etc.)
-│   └── lib/             # API client
-└── README.md
+│
+├── backend/
+│   ├── index.js              # Main server entry point
+│   ├── routes/               # API route handlers
+│   ├── middleware/           # Authentication middleware
+│   └── database/ (implicit)  # SQLite database usage
+│
+├── package.json              # Project dependencies
+└── README.md                 # Project documentation
 ```
 
-## 💡 Demo Flow
+---
 
-1. **Login** as `demo@student.edu` (Newbie) → Go to **Borrower Dashboard**
-2. Create a loan request (e.g., ₹1,000 for 7 days)
-3. **Logout** → Login as `sneha@college.edu` (Platinum) → Go to **Lender Dashboard**
-4. Find the loan request → **Fund** it
-5. **Logout** → Login as `demo@student.edu` → Go to **Borrower Dashboard**
-6. Click **Repay** on the funded loan → See interest calculation + trust score update!
+## ⚙️ Installation & Setup
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/your-username/ira.git
+cd ira
+```
+
+### 2️⃣ Install Dependencies
+
+```bash
+npm install
+cd backend
+npm install
+```
+
+### 3️⃣ Run the Server
+
+```bash
+node index.js
+```
+
+Server will start on:
+
+```
+http://localhost:5001
+```
+
+---
+
+## 🔗 API Endpoints
+
+### Auth
+
+```
+POST /api/auth/register
+POST /api/auth/login
+```
+
+### Loans
+
+```
+GET    /api/loans
+POST   /api/loans
+```
+
+### Repayments
+
+```
+GET    /api/repayments
+POST   /api/repayments
+```
+
+### Users
+
+```
+GET /api/users
+```
+
+### Verification
+
+```
+POST /api/verification
+```
+
+### Health Check
+
+```
+GET /api/health
+```
+
+---
+
+## 🧪 Testing
+
+Currently, no automated tests are configured.
+
+Run:
+
+```bash
+npm test
+```
+
+---
+
+## 🌱 Future Enhancements
+
+* Frontend UI (React or Vanilla JS)
+* Payment gateway integration
+* Credit scoring system
+* Notifications (email/SMS)
+* Admin dashboard
+* AI-based risk assessment
+
+---
+
+## 🤝 Contribution
+
+Contributions are welcome!
+Feel free to fork the repository and submit pull requests.
+
+---
+
+## 📄 License
+
+This project is licensed under the **ISC License**.
+
+---
+
+## 👨‍💻 Author
+
+**Rishi Chowdary**
+
+---
+
+## ⭐ Support
+
+If you like this project, consider giving it a ⭐ on GitHub!
