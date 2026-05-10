@@ -1,0 +1,270 @@
+{
+  "codeMappings": {
+    "countries": { "12": "India" },
+    "states": { "23": "Maharashtra" },
+    "districts": { "45": "Pune", "99": "Rural" },
+    "sectors": { "12": "Sector 12", "8": "Sector 8", "45": "Sector 45" },
+    "universities": { "01": "SPPU", "02": "Symbiosis", "03": "Rural Univ" },
+    "colleges": { "101": "MIT Pune", "102": "Symbiosis Pune", "103": "Rural College" },
+    "courses": { "01": "CSE", "02": "Mechanical", "03": "Electrical", "04": "BBA", "05": "Management", "06": "Arts", "07": "Science" }
+  },
+  "colleges": [
+    {
+      "id": "12 23 45 12 01 101 2023 2027",
+      "name": "MIT Pune",
+      "code": "101",
+      "password": "college@123",
+      "state": "23",
+      "district": "45",
+      "sector": "12",
+      "universityCode": "01",
+      "collegeCode": "101",
+      "foundedYear": 1990,
+      "programs": [
+        {
+          "id": "12 23 45 12 01 101 01 2023 2027",
+          "name": "Computer Science & Engineering",
+          "code": "01",
+          "startYear": 2023,
+          "endYear": 2027,
+          "capacity": 60
+        },
+        {
+          "id": "12 23 45 12 01 101 02 2023 2027",
+          "name": "Mechanical Engineering",
+          "code": "02",
+          "startYear": 2023,
+          "endYear": 2027,
+          "capacity": 50
+        },
+        {
+          "id": "12 23 45 12 01 101 03 2023 2027",
+          "name": "Electrical Engineering",
+          "code": "03",
+          "startYear": 2023,
+          "endYear": 2027,
+          "capacity": 45
+        }
+      ],
+      "students": [
+        {
+          "id": 1,
+          "borrowingAccountId": "12 23 45 01 101 01 10001",
+          "name": "Aarav Sharma",
+          "email": "aarav.sharma@mit.pune.ac.in",
+          "phone": "9876543210",
+          "courseCode": "01",
+          "year": 3,
+          "enrollmentNo": "MIT/2021/CSE/001",
+          "status": "approved",
+          "trustScore": 850,
+          "trustPoints": 1200,
+          "totalBorrowed": 25000,
+          "totalLent": 0,
+          "feeReceiptUrl": "https://example.com/receipts/aarav.pdf",
+          "kyc_status": "verified"
+        },
+        {
+          "id": 2,
+          "borrowingAccountId": "12 23 45 01 101 01 10002",
+          "name": "Vihaan Mehta",
+          "email": "vihaan.mehta@mit.pune.ac.in",
+          "phone": "9876543211",
+          "courseCode": "01",
+          "year": 4,
+          "enrollmentNo": "MIT/2020/CSE/002",
+          "status": "approved",
+          "trustScore": 920,
+          "trustPoints": 1500,
+          "totalBorrowed": 30000,
+          "totalLent": 5000,
+          "feeReceiptUrl": "https://example.com/receipts/vihaan.pdf",
+          "kyc_status": "verified"
+        },
+        {
+          "id": 3,
+          "borrowingAccountId": "12 23 45 01 101 02 10003",
+          "name": "Diya Patil",
+          "email": "diya.patil@mit.pune.ac.in",
+          "phone": "9876543212",
+          "courseCode": "02",
+          "year": 3,
+          "enrollmentNo": "MIT/2021/MECH/001",
+          "status": "approved",
+          "trustScore": 780,
+          "trustPoints": 950,
+          "totalBorrowed": 20000,
+          "totalLent": 0,
+          "feeReceiptUrl": "https://example.com/receipts/diya.pdf",
+          "kyc_status": "verified"
+        },
+        {
+          "id": 4,
+          "borrowingAccountId": "12 23 45 01 101 01 10004",
+          "name": "Rohan Desai",
+          "email": "rohan.desai@mit.pune.ac.in",
+          "phone": "9876543213",
+          "courseCode": "01",
+          "year": 2,
+          "enrollmentNo": "MIT/2022/CSE/015",
+          "status": "pending",
+          "trustScore": 650,
+          "trustPoints": 500,
+          "totalBorrowed": 10000,
+          "totalLent": 2000,
+          "feeReceiptUrl": "https://example.com/receipts/rohan.pdf",
+          "kyc_status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "12 23 45 08 02 102 2024 2027",
+      "name": "Symbiosis Pune",
+      "code": "102",
+      "password": "symbiosis@123",
+      "state": "23",
+      "district": "45",
+      "sector": "8",
+      "universityCode": "02",
+      "collegeCode": "102",
+      "foundedYear": 2002,
+      "programs": [
+        {
+          "id": "12 23 45 08 02 102 04 2024 2027",
+          "name": "BBA (Bachelor of Business Administration)",
+          "code": "04",
+          "startYear": 2024,
+          "endYear": 2027,
+          "capacity": 80
+        },
+        {
+          "id": "12 23 45 08 02 102 05 2023 2027",
+          "name": "Management",
+          "code": "05",
+          "startYear": 2023,
+          "endYear": 2027,
+          "capacity": 70
+        }
+      ],
+      "students": [
+        {
+          "id": 5,
+          "borrowingAccountId": "12 23 45 02 102 04 20001",
+          "name": "Riya Menon",
+          "email": "riya.menon@symbiosis.pune.ac.in",
+          "phone": "9876543214",
+          "courseCode": "04",
+          "year": 2,
+          "enrollmentNo": "SYM/2023/BBA/045",
+          "status": "pending",
+          "trustScore": 720,
+          "trustPoints": 800,
+          "totalBorrowed": 15000,
+          "totalLent": 0,
+          "feeReceiptUrl": "https://example.com/receipts/riya.pdf",
+          "kyc_status": "pending"
+        },
+        {
+          "id": 6,
+          "borrowingAccountId": "12 23 45 02 102 04 20002",
+          "name": "Nikhil Gupta",
+          "email": "nikhil.gupta@symbiosis.pune.ac.in",
+          "phone": "9876543215",
+          "courseCode": "04",
+          "year": 1,
+          "enrollmentNo": "SYM/2024/BBA/078",
+          "status": "pending",
+          "trustScore": 600,
+          "trustPoints": 300,
+          "totalBorrowed": 5000,
+          "totalLent": 0,
+          "feeReceiptUrl": "https://example.com/receipts/nikhil.pdf",
+          "kyc_status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "12 99 45 45 03 103 2025 2028",
+      "name": "Rural College",
+      "code": "103",
+      "password": "rural@123",
+      "state": "23",
+      "district": "99",
+      "sector": "45",
+      "universityCode": "03",
+      "collegeCode": "103",
+      "foundedYear": 1985,
+      "programs": [
+        {
+          "id": "12 99 45 45 03 103 06 2025 2028",
+          "name": "Arts",
+          "code": "06",
+          "startYear": 2025,
+          "endYear": 2028,
+          "capacity": 100
+        },
+        {
+          "id": "12 99 45 45 03 103 07 2024 2028",
+          "name": "Science",
+          "code": "07",
+          "startYear": 2024,
+          "endYear": 2028,
+          "capacity": 90
+        }
+      ],
+      "students": [
+        {
+          "id": 7,
+          "borrowingAccountId": "12 99 45 03 103 06 30001",
+          "name": "Karthik Iyer",
+          "email": "karthik.iyer@rural.ac.in",
+          "phone": "9876543216",
+          "courseCode": "06",
+          "year": 1,
+          "enrollmentNo": "RUR/2025/ARTS/123",
+          "status": "pending",
+          "trustScore": 550,
+          "trustPoints": 200,
+          "totalBorrowed": 8000,
+          "totalLent": 0,
+          "feeReceiptUrl": "https://example.com/receipts/karthik.pdf",
+          "kyc_status": "pending"
+        },
+        {
+          "id": 8,
+          "borrowingAccountId": "12 99 45 03 103 07 30002",
+          "name": "Priya Singh",
+          "email": "priya.singh@rural.ac.in",
+          "phone": "9876543217",
+          "courseCode": "07",
+          "year": 2,
+          "enrollmentNo": "RUR/2024/SCNC/156",
+          "status": "approved",
+          "trustScore": 700,
+          "trustPoints": 750,
+          "totalBorrowed": 12000,
+          "totalLent": 0,
+          "feeReceiptUrl": "https://example.com/receipts/priya.pdf",
+          "kyc_status": "verified"
+        }
+      ]
+    }
+  ],
+  "idFormats": {
+    "collegeProgramId": {
+      "format": "COUNTRY STATE DISTRICT SECTOR UNIVERSITY COLLEGE COURSE START_YEAR END_YEAR",
+      "example": "12 23 45 12 01 101 01 2023 2027",
+      "description": "Unique identifier for a college program (all numeric, space separated)"
+    },
+    "borrowingAccountId": {
+      "format": "COUNTRY STATE DISTRICT UNIVERSITY COLLEGE COURSE 5-DIGIT",
+      "example": "12 23 45 01 101 01 10001",
+      "description": "Student borrowing account ID (all numeric, space separated)"
+    },
+    "lendingAccountId": {
+      "format": "COUNTRY STATE DISTRICT SECTOR 5-DIGIT",
+      "example": "12 23 45 12 10001",
+      "description": "Investor/lender account ID by sector (all numeric, space separated)"
+    }
+  }
+}

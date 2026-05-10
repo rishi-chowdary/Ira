@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="coinGrad" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#B8860B"/>
+    </radialGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+  </defs>
+  <circle cx="32" cy="32" r="32" fill="url(#bgGrad)"/>
+  <circle cx="32" cy="32" r="24" fill="url(#coinGrad)" stroke="#DAA520" stroke-width="2"/>
+  <text x="32" y="41" font-family="Arial Black, sans-serif" font-size="22" font-weight="900" fill="#7B4F00" text-anchor="middle">₹</text>
+</svg>

@@ -1,0 +1,588 @@
+{
+  "meta": {
+    "nextIds": {
+      "pendingColleges": 2,
+      "colleges": 2,
+      "collegePrograms": 3,
+      "users": 8,
+      "loans": 2,
+      "investments": 2,
+      "transactions": 6,
+      "adminAuditLog": 1,
+      "refreshTokens": 9,
+      "otpSessions": 1
+    },
+    "createdAt": "2026-05-10T14:16:59.638Z",
+    "updatedAt": "2026-05-10T14:33:48.045Z"
+  },
+  "states": [
+    {
+      "id": 1,
+      "code": "58",
+      "name": "Maharashtra"
+    },
+    {
+      "id": 2,
+      "code": "62",
+      "name": "Karnataka"
+    },
+    {
+      "id": 3,
+      "code": "74",
+      "name": "Tamil Nadu"
+    },
+    {
+      "id": 4,
+      "code": "75",
+      "name": "Delhi"
+    },
+    {
+      "id": 5,
+      "code": "56",
+      "name": "Uttar Pradesh"
+    }
+  ],
+  "districts": [
+    {
+      "id": 1,
+      "stateCode": "58",
+      "code": "101",
+      "name": "Pune"
+    },
+    {
+      "id": 2,
+      "stateCode": "58",
+      "code": "102",
+      "name": "Mumbai"
+    },
+    {
+      "id": 3,
+      "stateCode": "62",
+      "code": "201",
+      "name": "Bengaluru Urban"
+    },
+    {
+      "id": 4,
+      "stateCode": "74",
+      "code": "301",
+      "name": "Chennai"
+    },
+    {
+      "id": 5,
+      "stateCode": "75",
+      "code": "401",
+      "name": "New Delhi"
+    }
+  ],
+  "universities": [
+    {
+      "id": 1,
+      "stateCode": "58",
+      "districtCode": "101",
+      "code": "001",
+      "name": "Symbiosis International University",
+      "shortName": "SIU"
+    },
+    {
+      "id": 2,
+      "stateCode": "62",
+      "districtCode": "201",
+      "code": "001",
+      "name": "Bengaluru City University",
+      "shortName": "BCU"
+    },
+    {
+      "id": 3,
+      "stateCode": "74",
+      "districtCode": "301",
+      "code": "001",
+      "name": "University of Madras",
+      "shortName": "UOM"
+    }
+  ],
+  "colleges": [
+    {
+      "id": 1,
+      "universityId": 1,
+      "universityCode": "001",
+      "universityName": "Symbiosis International University",
+      "universityShortName": "SIU",
+      "collegeCode": "001",
+      "collegeName": "Symbiosis Institute of Technology",
+      "collegeShortName": "SIT",
+      "state": "Maharashtra",
+      "stateCode": "58",
+      "district": "Pune",
+      "districtCode": "101",
+      "sectorCode": "450",
+      "pincode": "411016",
+      "contactEmail": "admin@symbiosis.edu",
+      "contactPhone": "9876543210",
+      "studentEmailDomain": "symbiosis.edu",
+      "loginCode": "91 58 101 450 001 001 01 2024 2028",
+      "passwordHash": "$2b$10$hSpuMsyvg4nm1B5gSt7PquOb7tgJ6blhb7mjQwX1Z2YwB1GomPG8u",
+      "status": "approved",
+      "createdAt": "2026-05-10T14:16:59.638Z",
+      "updatedAt": "2026-05-10T14:16:59.638Z"
+    }
+  ],
+  "collegePrograms": [
+    {
+      "id": 1,
+      "collegeId": 1,
+      "programId": "91 58 101 450 001 001 01 2024 2028",
+      "startYear": 2024,
+      "endYear": 2028,
+      "courseCode": "01",
+      "courseName": "B.Tech",
+      "branches": [
+        "Computer Science",
+        "AI & DS"
+      ]
+    },
+    {
+      "id": 2,
+      "collegeId": 1,
+      "programId": "91 58 101 450 001 001 02 2024 2026",
+      "startYear": 2024,
+      "endYear": 2026,
+      "courseCode": "02",
+      "courseName": "MBA",
+      "branches": [
+        "Finance",
+        "Marketing"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "email": "admin@ira.co.in",
+      "password_hash": "$2b$10$BrcqzdDPoYFbPE7.Gg1vju1i/NZHPsTgPftuxO2.R/Ev/9pIVc7me",
+      "full_name": "IRA Platform Admin",
+      "whatsapp": "9999999999",
+      "upi_id": "admin@ira",
+      "college_email": "admin@ira.co.in",
+      "shri_score": 950,
+      "batua_locked": 0,
+      "batua_unlocked": 0,
+      "tijori": 0,
+      "role": "admin",
+      "kyc_status": "verified",
+      "college_verified": true,
+      "wallet_activated": true,
+      "mode": "lender",
+      "can_borrow": false,
+      "can_lend": false,
+      "created_at": "2026-05-10T14:16:59.638Z",
+      "updated_at": "2026-05-10T14:16:59.638Z"
+    },
+    {
+      "id": 2,
+      "email": "college@symbiosis.edu",
+      "password_hash": "$2b$10$hSpuMsyvg4nm1B5gSt7PquOb7tgJ6blhb7mjQwX1Z2YwB1GomPG8u",
+      "full_name": "Symbiosis College Admin",
+      "whatsapp": "9888888888",
+      "upi_id": "college@symbiosis",
+      "college_email": "college@symbiosis.edu",
+      "shri_score": 900,
+      "batua_locked": 0,
+      "batua_unlocked": 0,
+      "tijori": 0,
+      "role": "college_admin",
+      "collegeId": 1,
+      "kyc_status": "verified",
+      "college_verified": true,
+      "wallet_activated": true,
+      "mode": "lender",
+      "can_borrow": false,
+      "can_lend": false,
+      "created_at": "2026-05-10T14:16:59.638Z",
+      "updated_at": "2026-05-10T14:16:59.638Z"
+    },
+    {
+      "id": 3,
+      "email": "aarav.mehta@symbiosis.edu",
+      "password_hash": "$2b$10$mDbeOCrsY9UlZwnsWetGteIrDwSbnX72lxElvgMdMpjMh9KVuSN0.",
+      "full_name": "Aarav Mehta",
+      "whatsapp": "9000000001",
+      "upi_id": "aarav@upi",
+      "college_email": "aarav.mehta@symbiosis.edu",
+      "shri_score": 690,
+      "batua_locked": 320,
+      "batua_unlocked": 739.5,
+      "tijori": 120,
+      "role": "both",
+      "kyc_status": "verified",
+      "college_verified": true,
+      "wallet_activated": true,
+      "mode": "borrower",
+      "can_borrow": true,
+      "can_lend": true,
+      "stateCode": "58",
+      "districtCode": "101",
+      "sectorCode": "450",
+      "universityCode": "001",
+      "collegeCode": "001",
+      "course_code": "01",
+      "course_name": "B.Tech",
+      "branch_name": "Computer Science",
+      "year": 3,
+      "enrollment_number": "SIT2024001",
+      "collegeId": 1,
+      "lending_account_id": "91 58 101 450 00003",
+      "borrowing_account_id": "91 58 101 001 001 01 00003",
+      "mock_upi_balance": 1500,
+      "student_status": "approved",
+      "created_at": "2026-05-10T14:16:59.638Z",
+      "updated_at": "2026-05-10T14:16:59.638Z"
+    },
+    {
+      "id": 4,
+      "email": "vihaan.singh@symbiosis.edu",
+      "password_hash": "$2b$10$mDbeOCrsY9UlZwnsWetGteIrDwSbnX72lxElvgMdMpjMh9KVuSN0.",
+      "full_name": "Vihaan Singh",
+      "whatsapp": "9000000002",
+      "upi_id": "vihaan@upi",
+      "college_email": "vihaan.singh@symbiosis.edu",
+      "shri_score": 820,
+      "batua_locked": 500,
+      "batua_unlocked": 2800,
+      "tijori": 1934.42,
+      "role": "both",
+      "kyc_status": "verified",
+      "college_verified": true,
+      "wallet_activated": true,
+      "mode": "lender",
+      "can_borrow": true,
+      "can_lend": true,
+      "stateCode": "58",
+      "districtCode": "101",
+      "sectorCode": "450",
+      "universityCode": "001",
+      "collegeCode": "001",
+      "course_code": "01",
+      "course_name": "B.Tech",
+      "branch_name": "AI & DS",
+      "year": 4,
+      "enrollment_number": "SIT2023002",
+      "collegeId": 1,
+      "lending_account_id": "91 58 101 450 00004",
+      "borrowing_account_id": "91 58 101 001 001 01 00004",
+      "mock_upi_balance": 2500,
+      "student_status": "approved",
+      "created_at": "2026-05-10T14:16:59.638Z",
+      "updated_at": "2026-05-10T14:16:59.638Z"
+    },
+    {
+      "id": 5,
+      "email": "diya.iyer@symbiosis.edu",
+      "password_hash": "$2b$10$mDbeOCrsY9UlZwnsWetGteIrDwSbnX72lxElvgMdMpjMh9KVuSN0.",
+      "full_name": "Diya Iyer",
+      "whatsapp": "9000000003",
+      "upi_id": "diya@upi",
+      "college_email": "diya.iyer@symbiosis.edu",
+      "shri_score": 760,
+      "batua_locked": 220,
+      "batua_unlocked": 2600,
+      "tijori": 480,
+      "role": "both",
+      "kyc_status": "verified",
+      "college_verified": true,
+      "wallet_activated": true,
+      "mode": "lender",
+      "can_borrow": true,
+      "can_lend": true,
+      "stateCode": "58",
+      "districtCode": "101",
+      "sectorCode": "450",
+      "universityCode": "001",
+      "collegeCode": "001",
+      "course_code": "02",
+      "course_name": "MBA",
+      "branch_name": "Finance",
+      "year": 2,
+      "enrollment_number": "SIT2024003",
+      "collegeId": 1,
+      "lending_account_id": "91 58 101 450 00005",
+      "borrowing_account_id": "91 58 101 001 001 02 00005",
+      "mock_upi_balance": 1200,
+      "student_status": "approved",
+      "created_at": "2026-05-10T14:16:59.638Z",
+      "updated_at": "2026-05-10T14:16:59.638Z"
+    },
+    {
+      "id": 6,
+      "email": "riya.menon@symbiosis.edu",
+      "password_hash": "$2b$10$mDbeOCrsY9UlZwnsWetGteIrDwSbnX72lxElvgMdMpjMh9KVuSN0.",
+      "full_name": "Riya Menon",
+      "whatsapp": "9000000004",
+      "upi_id": "riya@upi",
+      "college_email": "riya.menon@symbiosis.edu",
+      "shri_score": 730,
+      "batua_locked": 600,
+      "batua_unlocked": 1950,
+      "tijori": 650,
+      "role": "both",
+      "kyc_status": "verified",
+      "college_verified": true,
+      "wallet_activated": true,
+      "mode": "both",
+      "can_borrow": true,
+      "can_lend": true,
+      "stateCode": "58",
+      "districtCode": "101",
+      "sectorCode": "450",
+      "universityCode": "001",
+      "collegeCode": "001",
+      "course_code": "02",
+      "course_name": "MBA",
+      "branch_name": "Marketing",
+      "year": 2,
+      "enrollment_number": "SIT2024004",
+      "collegeId": 1,
+      "lending_account_id": "91 58 101 450 00006",
+      "borrowing_account_id": "91 58 101 001 001 02 00006",
+      "mock_upi_balance": 900,
+      "student_status": "approved",
+      "created_at": "2026-05-10T14:16:59.638Z",
+      "updated_at": "2026-05-10T14:16:59.638Z"
+    },
+    {
+      "id": 7,
+      "email": "karthik.rao@symbiosis.edu",
+      "password_hash": "$2b$10$mDbeOCrsY9UlZwnsWetGteIrDwSbnX72lxElvgMdMpjMh9KVuSN0.",
+      "full_name": "Karthik Rao",
+      "whatsapp": "9000000005",
+      "upi_id": "karthik@upi",
+      "college_email": "karthik.rao@symbiosis.edu",
+      "shri_score": 680,
+      "batua_locked": 350,
+      "batua_unlocked": 1100,
+      "tijori": 200,
+      "role": "both",
+      "kyc_status": "verified",
+      "college_verified": true,
+      "wallet_activated": true,
+      "mode": "lender",
+      "can_borrow": true,
+      "can_lend": true,
+      "stateCode": "58",
+      "districtCode": "101",
+      "sectorCode": "450",
+      "universityCode": "001",
+      "collegeCode": "001",
+      "course_code": "01",
+      "course_name": "B.Tech",
+      "branch_name": "Computer Science",
+      "year": 4,
+      "enrollment_number": "SIT2023005",
+      "collegeId": 1,
+      "lending_account_id": "91 58 101 450 00007",
+      "borrowing_account_id": "91 58 101 001 001 01 00007",
+      "mock_upi_balance": 1000,
+      "student_status": "approved",
+      "created_at": "2026-05-10T14:16:59.638Z",
+      "updated_at": "2026-05-10T14:16:59.638Z"
+    }
+  ],
+  "pendingColleges": [
+    {
+      "id": 1,
+      "submitted_data": {
+        "university": {
+          "name": "Pune Innovation University",
+          "shortName": "PIU"
+        },
+        "college": {
+          "name": "PIU School of Design",
+          "shortName": "PIUSD"
+        },
+        "location": {
+          "state": "Maharashtra",
+          "district": "Pune",
+          "areaCode": "451",
+          "pincode": "411045"
+        },
+        "courses": [
+          {
+            "name": "B.Des",
+            "duration": 4,
+            "branches": [
+              "Product Design",
+              "UX Design"
+            ]
+          }
+        ],
+        "contact": {
+          "email": "registrar@piu.edu",
+          "phone": "9123456789"
+        }
+      },
+      "status": "pending_admin",
+      "ml_score": 0.94,
+      "created_at": "2026-05-10T14:16:59.638Z",
+      "processed_at": null
+    }
+  ],
+  "guarantors": [
+    {
+      "borrower_id": 3,
+      "guarantor_id": 6,
+      "status": "approved",
+      "approved_at": "2026-05-10T14:16:59.638Z"
+    },
+    {
+      "borrower_id": 3,
+      "guarantor_id": 7,
+      "status": "approved",
+      "approved_at": "2026-05-10T14:16:59.638Z"
+    }
+  ],
+  "adminAuditLog": [],
+  "loans": [
+    {
+      "id": 1,
+      "borrower_id": 3,
+      "amount": 1000,
+      "tenure_days": 10,
+      "purpose": "Books",
+      "status": "repaid",
+      "interest_rate": 4.05,
+      "interest_amount": 40.5,
+      "total_repayable": 1040.5,
+      "due_date": "2026-05-20T14:17:35.848Z",
+      "funded_amount": 1000,
+      "created_at": "2026-05-10T14:17:35.848Z",
+      "repaid_at": "2026-05-10T14:17:41.377Z"
+    }
+  ],
+  "investments": [
+    {
+      "id": 1,
+      "lender_id": 4,
+      "loan_id": 1,
+      "amount": 1000,
+      "expected_return": 1040.5,
+      "status": "completed",
+      "created_at": "2026-05-10T14:17:35.848Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": 1,
+      "user_id": 4,
+      "type": "loan_funded",
+      "amount": 1000,
+      "balance_after": 2800,
+      "description": "Funded loan #1",
+      "created_at": "2026-05-10T14:17:35.848Z"
+    },
+    {
+      "id": 2,
+      "user_id": 3,
+      "type": "loan_disbursed",
+      "amount": 1000,
+      "balance_after": 1780,
+      "description": "Loan #1 disbursed",
+      "created_at": "2026-05-10T14:17:35.848Z"
+    },
+    {
+      "id": 3,
+      "user_id": 4,
+      "type": "repayment_received",
+      "amount": 1034.42,
+      "balance_after": 1934.42,
+      "description": "Repayment received for loan #1",
+      "created_at": "2026-05-10T14:17:41.378Z"
+    },
+    {
+      "id": 4,
+      "user_id": 1,
+      "type": "platform_interest",
+      "amount": 6.08,
+      "balance_after": 0,
+      "description": "Interest earned on loan #1",
+      "created_at": "2026-05-10T14:17:41.378Z"
+    },
+    {
+      "id": 5,
+      "user_id": 3,
+      "type": "loan_repayment",
+      "amount": 1040.5,
+      "balance_after": 739.5,
+      "description": "Loan #1 repaid",
+      "created_at": "2026-05-10T14:17:41.378Z"
+    }
+  ],
+  "notifications": [],
+  "refreshTokens": [
+    {
+      "id": 1,
+      "tokenId": "f2283cdd-d77c-4423-8c8a-6ba49934d996",
+      "subjectType": "college",
+      "subjectId": 1,
+      "revokedAt": null,
+      "createdAt": "2026-05-10T14:17:19.547Z"
+    },
+    {
+      "id": 2,
+      "tokenId": "7a4b9831-494e-424b-921a-1068ce27760f",
+      "subjectType": "user",
+      "subjectId": 3,
+      "revokedAt": null,
+      "createdAt": "2026-05-10T14:17:19.678Z"
+    },
+    {
+      "id": 3,
+      "tokenId": "9e880461-a9e7-484a-bf1c-ea5fa59ededc",
+      "subjectType": "user",
+      "subjectId": 3,
+      "revokedAt": null,
+      "createdAt": "2026-05-10T14:17:29.649Z"
+    },
+    {
+      "id": 4,
+      "tokenId": "27be7bdb-a614-4708-af86-4bed3328e757",
+      "subjectType": "user",
+      "subjectId": 3,
+      "revokedAt": null,
+      "createdAt": "2026-05-10T14:17:35.815Z"
+    },
+    {
+      "id": 5,
+      "tokenId": "b9eb90ef-6c0b-4aab-8cc6-c34dad774cbe",
+      "subjectType": "user",
+      "subjectId": 3,
+      "revokedAt": null,
+      "createdAt": "2026-05-10T14:17:41.320Z"
+    },
+    {
+      "id": 6,
+      "tokenId": "e141c88a-f8f8-45e6-8773-81e704f42169",
+      "subjectType": "user",
+      "subjectId": 3,
+      "revokedAt": null,
+      "createdAt": "2026-05-10T14:32:43.773Z"
+    },
+    {
+      "id": 7,
+      "tokenId": "c5f1c0ac-0b49-4e65-9667-22cdc1f0ed91",
+      "subjectType": "user",
+      "subjectId": 3,
+      "revokedAt": null,
+      "createdAt": "2026-05-10T14:32:44.159Z"
+    },
+    {
+      "id": 8,
+      "tokenId": "5e0a3113-c02d-4808-b555-a2a879752207",
+      "subjectType": "user",
+      "subjectId": 3,
+      "revokedAt": null,
+      "createdAt": "2026-05-10T14:33:48.045Z"
+    }
+  ],
+  "otpSessions": [],
+  "friends": [],
+  "messages": []
+}
