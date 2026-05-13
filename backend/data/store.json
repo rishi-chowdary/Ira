@@ -10,7 +10,11 @@
       "transactions": 6,
       "adminAuditLog": 1,
       "refreshTokens": 9,
-      "otpSessions": 1
+      "otpSessions": 1,
+      "friends": 1,
+      "privateLoans": 1,
+      "notifications": 1,
+      "messages": 1
     },
     "createdAt": "2026-05-10T14:16:59.638Z",
     "updatedAt": "2026-05-10T14:33:48.045Z"

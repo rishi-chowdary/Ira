@@ -72,6 +72,8 @@ export interface Loan {
   total_repayable: number;
   due_date: string;
   funded_amount: number;
+  schedule_frequency?: string;
+  upi_autopay_mandate?: { mandate_id: string; active: boolean; created_at: string };
   created_at: string;
   repaid_at?: string;
 }

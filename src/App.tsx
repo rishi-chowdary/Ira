@@ -9,6 +9,7 @@ import FriendsPage from './pages/FriendsPage';
 import GuarantorsPage from './pages/GuarantorsPage';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
+import NotificationsPage from './pages/NotificationsPage';
 import OnboardingPage from './pages/OnboardingPage';
 import ProfilePage from './pages/ProfilePage';
 import SignUpPage from './pages/SignUpPage';
@@ -85,6 +86,14 @@ export default function App() {
             element={
               <ProtectedRoute mode="user">
                 <TransactionHistoryPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedRoute mode="user">
+                <NotificationsPage />
               </ProtectedRoute>
             }
           />

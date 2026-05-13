@@ -250,7 +250,7 @@ export const apiClient = {
     });
   },
 
-  requestLoan(token: string, payload: { amount: number; tenure: number; purpose?: string }) {
+  requestLoan(token: string, payload: { amount: number; tenure: number; purpose?: string; scheduleFrequency?: string }) {
     return request<{ loan: Record<string, unknown>; matches: Array<Record<string, unknown>> }>(
       '/api/loans/request',
       {
@@ -288,6 +288,21 @@ export const apiClient = {
       yourGuarantors: Array<Record<string, unknown>>;
       youAsGuarantor: Array<Record<string, unknown>>;
     }>('/api/guarantors', { token });
+  },
+
+  requestGuarantor(token: string, guarantorEmail: string) {
+    return request('/api/guarantors/request', {
+      method: 'POST',
+      token,
+      body: { guarantorEmail },
+    });
+  },
+
+  getNotifications(token: string) {
+    return request<Array<{ id: number; title: string; message: string; is_read: boolean; created_at: string }>>(
+      '/api/notifications',
+      { token },
+    );
   },
 
   respondToGuarantor(token: string, borrowerId: number, action: 'approve' | 'reject') {

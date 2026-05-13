@@ -73,7 +73,13 @@ npm run preview
 
 ## API Integration
 
-The frontend communicates with the Express backend at `http://localhost:4000`.
+The frontend communicates with the Express backend at `http://localhost:5000` when running locally.
+
+### Environment
+
+- Rename `.env.example` to `.env` in the project root for frontend values.
+- Copy `backend/.env.example` to `backend/.env` for backend runtime values.
+- Backend env keys include `PORT`, `DATABASE_URL`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `FRONTEND_ORIGIN`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, and `FROM_EMAIL`.
 
 ### Key Endpoints
 

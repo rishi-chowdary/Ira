@@ -16,6 +16,9 @@ import collegeRoutes from './routes/college.js';
 import guarantorRoutes from './routes/guarantors.js';
 import loanRoutes from './routes/loans.js';
 import lookupRoutes from './routes/lookup.js';
+import notificationsRoutes from './routes/notifications.js';
+import privateLoanRoutes from './routes/private-loans.js';
+import friendsRoutes from './routes/friends.js';
 import statsRoutes from './routes/stats.js';
 import transactionRoutes from './routes/transactions.js';
 import userRoutes from './routes/users.js';
@@ -53,6 +56,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/loans', loanRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/guarantors', guarantorRoutes);
+app.use('/api/friends', friendsRoutes);
+app.use('/api/private-loans', privateLoanRoutes);
+app.use('/api/notifications', notificationsRoutes);
 app.use('/api/stats', statsRoutes);
 
 app.get('/api/colleges', async (req, res, next) => {

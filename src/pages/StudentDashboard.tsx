@@ -19,11 +19,14 @@ export default function StudentDashboard() {
     amount: 1000,
     tenure: 10,
     purpose: 'Books and project expenses',
+    frequency: 'daily',
   });
   const [loanState, setLoanState] = useState<LoanResponse>({ loans: [], investments: [] });
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [nomineeEmail, setNomineeEmail] = useState('');
+  const [nominationMessage, setNominationMessage] = useState('');
 
   const loadDashboard = async () => {
     try {
@@ -50,6 +53,7 @@ export default function StudentDashboard() {
           amount: Number(loanForm.amount),
           tenure: Number(loanForm.tenure),
           purpose: loanForm.purpose,
+          scheduleFrequency: loanForm.frequency,
         }),
       );
       setMessage(
@@ -58,6 +62,26 @@ export default function StudentDashboard() {
       await loadDashboard();
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : 'Unable to request loan');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const requestGuarantor = async () => {
+    if (!nomineeEmail) {
+      setError('Enter an email address to nominate a guarantor.');
+      return;
+    }
+    setLoading(true);
+    setError('');
+    setNominationMessage('');
+    try {
+      await withAuth((token) => apiClient.requestGuarantor(token, nomineeEmail));
+      setNominationMessage('Guarantor request sent. They have 7 days to accept or reject.');
+      setNomineeEmail('');
+      await loadDashboard();
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'Unable to send guarantor request');
     } finally {
       setLoading(false);
     }
@@ -86,6 +110,7 @@ export default function StudentDashboard() {
     >
       <div className="nav-links" style={{ marginBottom: 20 }}>
         <Link to="/profile">Profile</Link>
+        <Link to="/notifications">Notifications</Link>
         <Link to="/guarantors">Guarantors</Link>
         <Link to="/transaction-history">Transaction history</Link>
         <Link to="/account-closure">Account closure</Link>
@@ -126,36 +151,52 @@ export default function StudentDashboard() {
               <span className="pill">{user?.mode || 'borrower'}</span>
             </div>
             {user?.mode !== 'lender' ? (
-              <form className="stack" onSubmit={submitLoan}>
-                <div className="grid-two">
-                  <div className="field">
-                    <label htmlFor="loan-amount">Amount</label>
-                    <input
-                      id="loan-amount"
-                      className="input"
-                      type="number"
-                      min={500}
-                      max={5000}
-                      value={loanForm.amount}
-                      onChange={(event) =>
-                        setLoanForm((current) => ({ ...current, amount: Number(event.target.value) }))
-                      }
-                    />
+              <>
+                <form className="stack" onSubmit={submitLoan}>
+                  <div className="grid-two">
+                    <div className="field">
+                      <label htmlFor="loan-amount">Amount</label>
+                      <input
+                        id="loan-amount"
+                        className="input"
+                        type="number"
+                        min={500}
+                        max={5000}
+                        value={loanForm.amount}
+                        onChange={(event) =>
+                          setLoanForm((current) => ({ ...current, amount: Number(event.target.value) }))
+                        }
+                      />
+                    </div>
+                    <div className="field">
+                      <label htmlFor="loan-tenure">Tenure (days)</label>
+                      <input
+                        id="loan-tenure"
+                        className="input"
+                        type="number"
+                        min={1}
+                        max={90}
+                        value={loanForm.tenure}
+                        onChange={(event) =>
+                          setLoanForm((current) => ({ ...current, tenure: Number(event.target.value) }))
+                        }
+                      />
+                    </div>
                   </div>
-                  <div className="field">
-                    <label htmlFor="loan-tenure">Tenure (days)</label>
-                    <input
-                      id="loan-tenure"
-                      className="input"
-                      type="number"
-                      min={1}
-                      max={90}
-                      value={loanForm.tenure}
-                      onChange={(event) =>
-                        setLoanForm((current) => ({ ...current, tenure: Number(event.target.value) }))
-                      }
-                    />
-                  </div>
+                <div className="field">
+                  <label htmlFor="loan-frequency">Installment frequency</label>
+                  <select
+                    id="loan-frequency"
+                    className="select"
+                    value={loanForm.frequency}
+                    onChange={(event) =>
+                      setLoanForm((current) => ({ ...current, frequency: event.target.value }))
+                    }
+                  >
+                    <option value="daily">Daily</option>
+                    <option value="every1">Every 1 day</option>
+                    <option value="every2">Every 2 days</option>
+                  </select>
                 </div>
                 <div className="field">
                   <label htmlFor="loan-purpose">Purpose</label>
@@ -170,7 +211,30 @@ export default function StudentDashboard() {
                   {loading ? 'Processing…' : 'Request loan'}
                 </button>
               </form>
-            ) : (
+
+              <section className="card">
+                <div className="card__header">
+                  <h3>Nominate a guarantor</h3>
+                  <span className="pill">7-day expiry</span>
+                </div>
+                <div className="field">
+                  <label htmlFor="nominee-email">Guarantor email</label>
+                  <input
+                    id="nominee-email"
+                    className="input"
+                    type="email"
+                    placeholder="friend@example.com"
+                    value={nomineeEmail}
+                    onChange={(event) => setNomineeEmail(event.target.value)}
+                  />
+                </div>
+                <button className="button button--secondary" type="button" onClick={requestGuarantor} disabled={loading || !nomineeEmail}>
+                  {loading ? 'Sending…' : 'Send guarantor request'}
+                </button>
+                {nominationMessage ? <p className="muted" style={{ marginTop: 12 }}>{nominationMessage}</p> : null}
+              </section>
+            </>
+          ) : (
               <p className="muted">
                 Your unlocked Batua is used for public lender matching. Active investments appear
                 below.

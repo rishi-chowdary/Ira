@@ -5,6 +5,7 @@ import { BASE_INTEREST_SCHEDULE, SHRI_TIERS } from '../lib/constants.js';
 import { ApiError, assert } from '../lib/errors.js';
 import { mutateStore, readStore } from '../lib/store.js';
 import { authenticate, requireUser } from '../middleware/auth.js';
+import { sendEmail, sendWhatsappMessage } from '../lib/notifications.js';
 
 const router = express.Router();
 
@@ -12,6 +13,7 @@ const requestSchema = Joi.object({
   amount: Joi.number().integer().min(500).max(5000).required(),
   tenure: Joi.number().integer().min(1).max(90).required(),
   purpose: Joi.string().trim().allow('').optional(),
+  scheduleFrequency: Joi.string().valid('daily', 'every1', 'every2').optional(),
 });
 
 const repaySchema = Joi.object({
@@ -52,6 +54,28 @@ function recordTransaction(store, userId, type, amount, balanceAfter, descriptio
   });
 }
 
+function addNotification(store, userId, title, message, metadata = {}) {
+  store.notifications.push({
+    id: store.meta.nextIds.notifications++,
+    user_id: userId,
+    title,
+    message,
+    metadata,
+    is_read: false,
+    created_at: new Date().toISOString(),
+  });
+}
+
+async function dispatchUserMessage(user, title, message) {
+  if (!user) return;
+  if (user.email) {
+    sendEmail({ to: user.email, subject: title, text: message }).catch(() => {});
+  }
+  if (user.whatsapp) {
+    sendWhatsappMessage({ to: user.whatsapp, body: message }).catch(() => {});
+  }
+}
+
 router.use(authenticate, requireUser);
 
 router.get('/', async (req, res, next) => {
@@ -88,6 +112,7 @@ router.post('/request', async (req, res, next) => {
       const totalRepayable = roundMoney(payload.amount + interestAmount);
       const dueDate = new Date(Date.now() + payload.tenure * 24 * 60 * 60 * 1000).toISOString();
 
+      const scheduleFrequency = payload.scheduleFrequency || 'daily';
       const loan = {
         id: store.meta.nextIds.loans++,
         borrower_id: borrower.id,
@@ -100,6 +125,8 @@ router.post('/request', async (req, res, next) => {
         total_repayable: totalRepayable,
         due_date: dueDate,
         funded_amount: 0,
+        schedule_frequency: scheduleFrequency,
+        upi_autopay_mandate: null,
         created_at: new Date().toISOString(),
       };
       store.loans.push(loan);
@@ -138,12 +165,13 @@ router.post('/request', async (req, res, next) => {
         );
 
         const interestShare = roundMoney((interestAmount * contribution) / payload.amount);
+        const expectedReturn = roundMoney(contribution + interestShare);
         const investment = {
           id: store.meta.nextIds.investments++,
           lender_id: lender.id,
           loan_id: loan.id,
           amount: contribution,
-          expected_return: roundMoney(contribution + interestShare),
+          expected_return: expectedReturn,
           status: 'active',
           created_at: new Date().toISOString(),
         };
@@ -152,6 +180,7 @@ router.post('/request', async (req, res, next) => {
           lenderId: lender.id,
           lenderName: lender.full_name,
           amount: contribution,
+          expectedReturn,
           rank: getMatchRank(borrower, lender),
         });
         loan.funded_amount = roundMoney(loan.funded_amount + contribution);
@@ -160,6 +189,11 @@ router.post('/request', async (req, res, next) => {
 
       if (remaining <= 0) {
         loan.status = 'active';
+        loan.upi_autopay_mandate = {
+          mandate_id: `UPI-MD-${loan.id}-${Date.now()}`,
+          active: true,
+          created_at: new Date().toISOString(),
+        };
         borrower.batua_unlocked = roundMoney(borrower.batua_unlocked + loan.amount);
         recordTransaction(
           store,
@@ -169,6 +203,36 @@ router.post('/request', async (req, res, next) => {
           borrower.batua_unlocked,
           `Loan #${loan.id} disbursed`,
         );
+
+        addNotification(
+          store,
+          borrower.id,
+          `Loan #${loan.id} funded`,
+          `Your loan request for ₹${loan.amount} has been funded. Total repayable ₹${loan.total_repayable}.`,
+          { loanId: loan.id, type: 'loan_funded' },
+        );
+        void dispatchUserMessage(
+          borrower,
+          `Loan #${loan.id} funded`,
+          `Your loan request for ₹${loan.amount} has been funded. Total repayable ₹${loan.total_repayable}.`,
+        );
+
+        matches.forEach((match) => {
+          const lender = store.users.find((entry) => entry.id === match.lenderId);
+          if (!lender) return;
+          addNotification(
+            store,
+            lender.id,
+            `Loan #${loan.id} funded`,
+            `You funded ₹${match.amount} towards loan #${loan.id}. Expected return ₹${match.expectedReturn}.`,
+            { loanId: loan.id, type: 'loan_invested' },
+          );
+          void dispatchUserMessage(
+            lender,
+            `Loan #${loan.id} funded`,
+            `You funded ₹${match.amount} towards loan #${loan.id}. Expected return ₹${match.expectedReturn}.`,
+          );
+        });
       }
 
       return {
@@ -240,6 +304,58 @@ router.post('/repay', async (req, res, next) => {
 
       if (remaining > 0) {
         loan.status = 'defaulted';
+        const investments = store.investments.filter((entry) => entry.loan_id === loan.id);
+        const lenders = investments
+          .map((investment) => store.users.find((user) => user.id === investment.lender_id))
+          .filter(Boolean);
+        const guarantors = store.guarantors
+          .filter((entry) => entry.borrower_id === borrower.id && entry.status === 'approved')
+          .map((entry) => store.users.find((user) => user.id === entry.guarantor_id))
+          .filter(Boolean);
+
+        addNotification(
+          store,
+          borrower.id,
+          `Loan #${loan.id} defaulted`,
+          `Your loan is in default. ₹${remaining} remains unpaid. Your guarantors and lenders have been notified.`,
+          { loanId: loan.id, type: 'loan_default' },
+        );
+        void dispatchUserMessage(
+          borrower,
+          `Loan #${loan.id} defaulted`,
+          `Your loan is in default. ₹${remaining} remains unpaid. Your guarantors and lenders have been notified.`,
+        );
+
+        lenders.forEach((lender) => {
+          addNotification(
+            store,
+            lender.id,
+            `Loan #${loan.id} default notice`,
+            `Loan #${loan.id} has defaulted. Your funding is at risk.`,
+            { loanId: loan.id, type: 'loan_default' },
+          );
+          void dispatchUserMessage(
+            lender,
+            `Loan #${loan.id} default notice`,
+            `Loan #${loan.id} has defaulted. Your funding is at risk.`,
+          );
+        });
+
+        guarantors.forEach((guarantor) => {
+          addNotification(
+            store,
+            guarantor.id,
+            `Guarantor alert for loan #${loan.id}`,
+            `A borrower you guaranteed has defaulted on loan #${loan.id}. Please review the repayment status.`,
+            { loanId: loan.id, type: 'guarantor_default' },
+          );
+          void dispatchUserMessage(
+            guarantor,
+            `Guarantor alert for loan #${loan.id}`,
+            `A borrower you guaranteed has defaulted on loan #${loan.id}. Please review the repayment status.`,
+          );
+        });
+
         return {
           loan,
           totalDue,
@@ -274,7 +390,33 @@ router.post('/repay', async (req, res, next) => {
           `Repayment received for loan #${loan.id}`,
         );
         investment.status = 'completed';
+
+        addNotification(
+          store,
+          lender.id,
+          `Repayment received for loan #${loan.id}`,
+          `You received ₹${payout} for loan #${loan.id}.`,
+          { loanId: loan.id, type: 'repayment_received' },
+        );
+        void dispatchUserMessage(
+          lender,
+          `Repayment received for loan #${loan.id}`,
+          `You received ₹${payout} for loan #${loan.id}.`,
+        );
       });
+
+      addNotification(
+        store,
+        borrower.id,
+        `Loan #${loan.id} repaid`,
+        `Your repayment of ₹${totalDue} is complete. Thank you.`,
+        { loanId: loan.id, type: 'loan_repaid' },
+      );
+      void dispatchUserMessage(
+        borrower,
+        `Loan #${loan.id} repaid`,
+        `Your repayment of ₹${totalDue} is complete. Thank you.`,
+      );
 
       const admin = store.users.find((entry) => entry.role === 'admin');
       if (admin) {

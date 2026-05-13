@@ -41,7 +41,7 @@ export default function LiveCalculator() {
   const isFree = rate === 0;
 
   const amountPct = ((amount - 500) / (5000 - 500)) * 100;
-  const daysPct = ((days - 1) / 29) * 100;
+  const daysPct = ((days - 1) / 89) * 100;
 
   return (
     <div
@@ -94,7 +94,7 @@ export default function LiveCalculator() {
               <input
                 type="range"
                 min={1}
-                max={30}
+                max={90}
                 value={days}
                 onChange={(event) => setDays(Number(event.target.value))}
                 className="w-full h-2.5 rounded-full appearance-none"
@@ -103,7 +103,7 @@ export default function LiveCalculator() {
             </div>
             <div className="flex justify-between text-xs text-slate-400 mt-1.5 font-medium">
               <span>1 day</span>
-              <span>30 days</span>
+              <span>90 days</span>
             </div>
           </div>
 

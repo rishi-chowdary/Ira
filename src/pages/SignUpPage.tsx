@@ -1,5 +1,5 @@
-import { FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { FormEvent, MouseEvent, useEffect, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import FloatingCoins from '../components/FloatingCoins';
 import { useAuth } from '../contexts/AuthContext';
@@ -24,8 +24,31 @@ export default function SignUpPage() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [transitionActive, setTransitionActive] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
 
   const handleSecretTrigger = useIraTrigger(() => navigate('/college-portal'));
+
+  useEffect(() => {
+    if (!wrapperRef.current) return;
+
+    const originX = (location.state as { originX?: number; originY?: number } | null)?.originX;
+    const originY = (location.state as { originX?: number; originY?: number } | null)?.originY;
+
+    if (typeof originX === 'number' && typeof originY === 'number') {
+      const rect = wrapperRef.current.getBoundingClientRect();
+      wrapperRef.current.style.transformOrigin = `${Math.max(0, Math.min(rect.width, originX - rect.left))}px ${Math.max(0, Math.min(rect.height, originY - rect.top))}px`;
+    } else {
+      wrapperRef.current.style.transformOrigin = 'center center';
+    }
+
+    requestAnimationFrame(() => setTransitionActive(true));
+  }, [location.state]);
+
+  const navigateWithOrigin = (path: string) => (event: MouseEvent<HTMLButtonElement>) => {
+    navigate(path, { state: { originX: event.clientX, originY: event.clientY } });
+  };
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -62,15 +85,28 @@ export default function SignUpPage() {
 
   return (
     <div
-      className="min-h-screen relative overflow-hidden flex items-center justify-center p-4"
+      className="min-h-screen relative overflow-hidden flex items-center justify-center p-4 auth-page no-copy"
       style={{ background: 'linear-gradient(135deg, #EFF6FF 0%, #F0FDF4 50%, #FEF2F2 100%)' }}
+      onContextMenu={(event) => event.preventDefault()}
+      onCopy={(event) => event.preventDefault()}
     >
       <FloatingCoins count={10} />
-
+      <div className="auth-logo">
+        <Link to="/" className="brand-button">
+          <span className="brand-button__mark">₹</span>
+          <span className="gradient-text-blue-green">IRA</span>
+        </Link>
+      </div>
+      <button className="close-button auth-close" type="button" onClick={() => navigate('/')}>×</button>
       <div
-        className="absolute right-[-100px] top-[-100px] w-80 h-80 rounded-full opacity-5 animate-spin-slow"
-        style={{ background: 'radial-gradient(circle, #2563EB, #10B981)', animationDuration: '25s' }}
-      />
+        ref={wrapperRef}
+        className="page-transition-root"
+        style={{ transform: transitionActive ? 'scale(1) translateY(0)' : 'scale(0.92) translateY(18px)', opacity: transitionActive ? 1 : 0 }}
+      >
+        <div
+          className="absolute right-[-100px] top-[-100px] w-80 h-80 rounded-full opacity-5 animate-spin-slow"
+          style={{ background: 'radial-gradient(circle, #2563EB, #10B981)', animationDuration: '25s' }}
+        />
       <div
         className="absolute left-[-80px] bottom-[-80px] w-64 h-64 rounded-full opacity-5 animate-spin-slow"
         style={{ background: 'radial-gradient(circle, #EF4444, #2563EB)', animationDuration: '18s', animationDirection: 'reverse' }}
@@ -182,11 +218,10 @@ export default function SignUpPage() {
             Home
           </button>
           <span className="text-slate-300">•</span>
-          <button className="text-sm text-slate-500 hover:text-blue-600 font-semibold" type="button" onClick={() => navigate('/login')}>
+          <button className="text-sm text-slate-500 hover:text-blue-600 font-semibold" type="button" onClick={navigateWithOrigin('/login')}>
             I already have an account
           </button>
         </div>
       </div>
-    </div>
-  );
+    </div>  </div>  );
 }

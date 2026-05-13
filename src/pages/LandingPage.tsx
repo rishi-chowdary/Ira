@@ -83,7 +83,11 @@ export default function LandingPage() {
   const marketplaceLink = isAuthenticated ? '/dashboard' : '/login';
 
   return (
-    <div className="min-h-screen gradient-hero">
+    <div
+      className="min-h-screen gradient-hero no-copy"
+      onContextMenu={(event) => event.preventDefault()}
+      onCopy={(event) => event.preventDefault()}
+    >
       <nav className="glass sticky top-0 z-50 border-b border-white/60 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
@@ -217,9 +221,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="py-20 bg-slate-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
             <h2 className="text-4xl font-black text-slate-800 mb-3">Transparent Interest Rates</h2>
             <p className="text-slate-500">No hidden fees. Repay faster = pay less. Simple.</p>
           </div>

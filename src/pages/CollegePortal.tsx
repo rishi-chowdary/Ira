@@ -88,6 +88,8 @@ export default function CollegePortal() {
     [students],
   );
 
+  const courseSelectionRequired = !filters.course;
+
   const submitCollegeRegistration = async () => {
     try {
       await apiClient.registerCollege({
@@ -161,7 +163,7 @@ export default function CollegePortal() {
                 value={filters.course}
                 onChange={(event) => setFilters((current) => ({ ...current, course: event.target.value }))}
               >
-                <option value="">All courses</option>
+                <option value="">Select course first</option>
                 {courseOptions.map((course) => (
                   <option key={course} value={course}>
                     {course}
@@ -171,17 +173,20 @@ export default function CollegePortal() {
               <input
                 className="input"
                 placeholder="Year"
+                disabled={courseSelectionRequired}
                 value={filters.year}
                 onChange={(event) => setFilters((current) => ({ ...current, year: event.target.value }))}
               />
               <input
                 className="input"
                 placeholder="Search name or enrollment"
+                disabled={courseSelectionRequired}
                 value={filters.search}
                 onChange={(event) => setFilters((current) => ({ ...current, search: event.target.value }))}
               />
               <select
                 className="select"
+                disabled={courseSelectionRequired}
                 value={filters.status}
                 onChange={(event) => setFilters((current) => ({ ...current, status: event.target.value }))}
               >
@@ -191,6 +196,11 @@ export default function CollegePortal() {
                 <option value="rejected">Rejected</option>
               </select>
             </div>
+            {courseSelectionRequired ? (
+              <div className="feedback" style={{ marginTop: 12 }}>
+                Select a course to enable year, search, and status filters.
+              </div>
+            ) : null}
 
             <div className="table-scroll">
               <table className="table">
