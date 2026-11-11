@@ -3,6 +3,15 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { hashPassword } from './passwords.js';
+import {
+  getDb,
+  initDatabaseTables,
+  seedStaticMasterTables,
+  syncStoreToDb,
+  loadStoreFromDb,
+  getDatabaseStats,
+  getMasterData,
+} from './database.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -412,9 +421,29 @@ async function ensureStore() {
     return storeCache;
   }
 
+  initDatabaseTables();
+  seedStaticMasterTables();
+
+  const db = getDb();
+  let userCount = 0;
+  try {
+    const row = db.prepare('SELECT count(*) as count FROM users').get();
+    userCount = row ? row.count : 0;
+  } catch {
+    userCount = 0;
+  }
+
+  // If SQLite database already has data, load live state from the database
+  if (userCount > 0) {
+    storeCache = loadStoreFromDb();
+    return storeCache;
+  }
+
+  // Otherwise check if a store.json backup exists to hydrate the database
   try {
     const fileContent = await fs.readFile(dataFile, 'utf8');
     storeCache = JSON.parse(fileContent);
+    syncStoreToDb(storeCache);
     return storeCache;
   } catch (error) {
     if (error.code !== 'ENOENT') {
@@ -422,7 +451,9 @@ async function ensureStore() {
     }
   }
 
+  // Fallback: create fresh seed store and sync directly to database
   storeCache = await createSeedStore();
+  syncStoreToDb(storeCache);
   await fs.mkdir(path.dirname(dataFile), { recursive: true });
   await fs.writeFile(dataFile, JSON.stringify(storeCache, null, 2));
   return storeCache;
@@ -430,12 +461,17 @@ async function ensureStore() {
 
 async function persistStore() {
   storeCache.meta.updatedAt = nowIso();
+  // 1. Transactionally sync all mutations into the SQLite database tables
+  syncStoreToDb(storeCache);
+  // 2. Persist JSON snapshot as well
   await fs.writeFile(dataFile, JSON.stringify(storeCache, null, 2));
 }
 
 export async function initializeStore() {
   return ensureStore();
 }
+
+export { getDatabaseStats, getMasterData, getDb };
 
 export async function readStore(selector = (store) => store) {
   const store = await ensureStore();

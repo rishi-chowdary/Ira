@@ -6,7 +6,7 @@ import { createObjectCsvWriter } from 'csv-writer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const exportRoot = path.join(__dirname, '../../ira_data');
+const exportRoot = process.env.IRA_DATA_DIR || path.join(__dirname, '../../database/reference_data');
 
 async function writeCsv(filePath, headers, records) {
   await fs.mkdir(path.dirname(filePath), { recursive: true });

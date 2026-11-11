@@ -36,7 +36,28 @@ router.get('/', async (req, res, next) => {
       (entry) =>
         entry.requester_id === req.auth.user.id || entry.target_id === req.auth.user.id,
     );
-    res.json(requests);
+    const enriched = requests.map((entry) => {
+      const isRequester = entry.requester_id === req.auth.user.id;
+      const otherUserId = isRequester ? entry.target_id : entry.requester_id;
+      const otherUser = store.users.find((u) => u.id === otherUserId);
+      return {
+        ...entry,
+        isRequester,
+        peer: otherUser
+          ? {
+              id: otherUser.id,
+              full_name: otherUser.full_name,
+              email: otherUser.email,
+              college_email: otherUser.college_email,
+              borrowing_account_id: otherUser.borrowing_account_id,
+              course_name: otherUser.course_name,
+              year: otherUser.year,
+              shri_score: otherUser.shri_score,
+            }
+          : null,
+      };
+    });
+    res.json(enriched);
   } catch (error) {
     next(error);
   }

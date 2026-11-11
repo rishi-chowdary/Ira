@@ -43,7 +43,22 @@ router.get('/', async (req, res, next) => {
     const requests = store.privateLoans.filter(
       (entry) => entry.from_user_id === req.auth.user.id || entry.to_user_id === req.auth.user.id,
     );
-    res.json(requests);
+    const enriched = requests.map((entry) => {
+      const fromUser = store.users.find((u) => u.id === entry.from_user_id);
+      const toUser = store.users.find((u) => u.id === entry.to_user_id);
+      const isFromMe = entry.from_user_id === req.auth.user.id;
+      return {
+        ...entry,
+        isFromMe,
+        from_user: fromUser
+          ? { id: fromUser.id, full_name: fromUser.full_name, email: fromUser.email, borrowing_account_id: fromUser.borrowing_account_id }
+          : null,
+        to_user: toUser
+          ? { id: toUser.id, full_name: toUser.full_name, email: toUser.email, borrowing_account_id: toUser.borrowing_account_id }
+          : null,
+      };
+    });
+    res.json(enriched);
   } catch (error) {
     next(error);
   }

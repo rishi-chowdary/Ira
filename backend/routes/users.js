@@ -122,4 +122,93 @@ router.post('/onboarding/activate-wallet', requireUser, async (_req, res, next) 
   }
 });
 
+const rebalanceSchema = Joi.object({
+  locked: Joi.number().min(0).required(),
+  unlocked: Joi.number().min(0).required(),
+});
+
+router.post('/wallet/rebalance', requireUser, async (req, res, next) => {
+  try {
+    const payload = await rebalanceSchema.validateAsync(req.body, { abortEarly: false });
+    const user = await mutateStore(async (store) => {
+      const currentUser = store.users.find((entry) => entry.id === req.auth.user.id);
+      assert(currentUser, 404, 'User not found');
+      assert(currentUser.wallet_activated, 400, 'Wallet must be activated before rebalancing');
+
+      const currentTotal = Math.round(((currentUser.batua_locked || 0) + (currentUser.batua_unlocked || 0)) * 100) / 100;
+      const proposedTotal = Math.round((payload.locked + payload.unlocked) * 100) / 100;
+
+      // Ensure total funds are conserved
+      assert(
+        Math.abs(currentTotal - proposedTotal) <= 0.05,
+        400,
+        `Allocated total ₹${proposedTotal} does not match available Batua balance ₹${currentTotal}`
+      );
+
+      currentUser.batua_locked = payload.locked;
+      currentUser.batua_unlocked = payload.unlocked;
+      currentUser.updated_at = new Date().toISOString();
+
+      store.transactions.push({
+        id: store.meta.nextIds.transactions++,
+        user_id: currentUser.id,
+        type: 'wallet_rebalance',
+        amount: payload.locked,
+        balance_after: payload.unlocked,
+        description: `Batua reallocated: ₹${payload.locked.toFixed(2)} locked, ₹${payload.unlocked.toFixed(2)} unlocked`,
+        created_at: new Date().toISOString(),
+      });
+
+      return sanitiseUser(currentUser);
+    });
+
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/close-account', requireUser, async (req, res, next) => {
+  try {
+    const user = await mutateStore(async (store) => {
+      const currentUser = store.users.find((entry) => entry.id === req.auth.user.id);
+      assert(currentUser, 404, 'User not found');
+
+      const totalBalance = (currentUser.batua_locked || 0) + (currentUser.batua_unlocked || 0) + (currentUser.tijori || 0);
+      assert(totalBalance <= 0.01, 400, `Cannot close account: you still have a remaining balance of ₹${totalBalance.toFixed(2)}`);
+
+      const activeLoans = store.loans.filter(
+        (l) => l.borrower_id === currentUser.id && !['repaid', 'closed', 'rejected'].includes(l.status)
+      );
+      assert(activeLoans.length === 0, 400, `Cannot close account: you have ${activeLoans.length} active loan obligation(s)`);
+
+      const activeInvestments = store.investments.filter(
+        (inv) => inv.lender_id === currentUser.id && inv.status === 'active'
+      );
+      assert(activeInvestments.length === 0, 400, `Cannot close account: you have ${activeInvestments.length} active lent investment(s)`);
+
+      currentUser.student_status = 'closed';
+      currentUser.can_borrow = false;
+      currentUser.can_lend = false;
+      currentUser.updated_at = new Date().toISOString();
+
+      store.notifications.push({
+        id: store.meta.nextIds.notifications++,
+        user_id: currentUser.id,
+        title: 'Account Closure Processed',
+        message: 'Your IRA account obligations are settled and your profile is closed.',
+        type: 'account_closure',
+        is_read: false,
+        created_at: new Date().toISOString(),
+      });
+
+      return sanitiseUser(currentUser);
+    });
+
+    res.json({ ok: true, message: 'Account closed successfully', user });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;

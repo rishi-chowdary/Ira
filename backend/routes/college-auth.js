@@ -26,7 +26,7 @@ function setRefreshCookie(res, token) {
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
     maxAge: 7 * 24 * 60 * 60 * 1000,
-    path: '/api/college-auth',
+    path: '/',
   });
 }
 
@@ -63,6 +63,7 @@ router.post('/login', async (req, res, next) => {
 
       return {
         accessToken,
+        refreshToken: refresh.token,
         college: sanitiseCollege(college),
       };
     });

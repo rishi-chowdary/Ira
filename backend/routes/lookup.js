@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { readStore } from '../lib/store.js';
+import { readStore, getMasterData } from '../lib/store.js';
 
 const router = express.Router();
 
@@ -36,6 +36,33 @@ router.get('/universities', async (req, res, next) => {
       return true;
     });
     res.json(universities);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/interest-slabs', async (_req, res, next) => {
+  try {
+    const master = getMasterData();
+    res.json(master.interestSlabs);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/loan-purposes', async (_req, res, next) => {
+  try {
+    const master = getMasterData();
+    res.json(master.loanPurposes);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/shri-tiers', async (_req, res, next) => {
+  try {
+    const master = getMasterData();
+    res.json(master.shriTiers);
   } catch (error) {
     next(error);
   }

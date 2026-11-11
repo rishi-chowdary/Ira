@@ -5,7 +5,7 @@ import Joi from 'joi';
 import { AUTH_RATE_LIMIT, DEMO_OTP, OTP_TTL_MINUTES } from '../lib/constants.js';
 import { ApiError, assert } from '../lib/errors.js';
 import { sendEmail, sendWhatsappMessage } from '../lib/notifications.js';
-import { mutateStore, nextId, sanitiseUser } from '../lib/store.js';
+import { mutateStore, readStore, nextId, sanitiseUser } from '../lib/store.js';
 import { createAccessToken, createRefreshToken, verifyRefreshToken } from '../lib/tokens.js';
 import {
   hashPassword,
@@ -66,17 +66,13 @@ function setRefreshCookie(res, token) {
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
     maxAge: 7 * 24 * 60 * 60 * 1000,
-    path: '/api/auth',
+    path: '/',
   });
 }
 
 function clearRefreshCookie(res) {
-  res.clearCookie('refresh_token', {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    path: '/api/auth',
-  });
+  res.clearCookie('refresh_token', { path: '/' });
+  res.clearCookie('refresh_token', { path: '/api/auth' });
 }
 
 async function issueUserSession(store, user, res) {
@@ -101,7 +97,7 @@ async function issueUserSession(store, user, res) {
     createdAt: new Date().toISOString(),
   });
   setRefreshCookie(res, refresh.token);
-  return accessToken;
+  return { accessToken, refreshToken: refresh.token };
 }
 
 async function sendDualOtp({ email, whatsapp, purpose, emailOtp, whatsappOtp }) {
@@ -115,6 +111,93 @@ async function sendDualOtp({ email, whatsapp, purpose, emailOtp, whatsappOtp }) 
     body: `IRA ${purpose} OTP: ${whatsappOtp}`,
   });
 }
+
+router.get('/demo-accounts', async (_req, res, next) => {
+  try {
+    const store = await readStore();
+    const demoDefinitions = [
+      {
+        email: 'aarav.mehta@symbiosis.edu',
+        defaultId: 'aarav',
+        roleTitle: 'Student (Borrower & Lender)',
+        badge: 'Dual Mode',
+        badgeColor: 'bg-blue-100 text-blue-700 border-blue-200',
+        icon: '🎓',
+        defaultPassword: 'demo123',
+      },
+      {
+        email: 'vihaan.singh@symbiosis.edu',
+        defaultId: 'vihaan',
+        roleTitle: 'Student (Active Lender)',
+        badge: 'Lender',
+        badgeColor: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+        icon: '💰',
+        defaultPassword: 'demo123',
+      },
+      {
+        email: 'diya.iyer@symbiosis.edu',
+        defaultId: 'diya',
+        roleTitle: 'Student (Borrower Focus)',
+        badge: 'Borrower',
+        badgeColor: 'bg-purple-100 text-purple-700 border-purple-200',
+        icon: '📚',
+        defaultPassword: 'demo123',
+      },
+      {
+        email: 'admin@ira.co.in',
+        defaultId: 'admin',
+        roleTitle: 'Platform Superadmin',
+        badge: 'Superadmin',
+        badgeColor: 'bg-rose-100 text-rose-700 border-rose-200',
+        icon: '🛡️',
+        defaultPassword: 'admin123',
+      },
+    ];
+
+    const demoAccounts = demoDefinitions.map((def) => {
+      const user = store.users.find((u) => u.email === def.email);
+      const college = user?.collegeId
+        ? store.colleges.find((c) => c.id === user.collegeId)
+        : null;
+
+      const collegeName = college
+        ? `${college.collegeShortName || college.collegeName}, ${college.district}`
+        : def.email === 'admin@ira.co.in'
+        ? 'IRA Headquarters'
+        : 'Symbiosis SIT, Pune';
+
+      const totalBalance = user
+        ? (user.batua_locked || 0) + (user.batua_unlocked || 0)
+        : 0;
+
+      const details =
+        def.email === 'admin@ira.co.in'
+          ? 'Approvals, system metrics, platform revenue'
+          : `Shri Score: ${user?.shri_score ?? 600} • ₹${totalBalance.toLocaleString()} Batua balance`;
+
+      return {
+        id: def.defaultId,
+        roleTitle: def.roleTitle,
+        name: user?.full_name || def.defaultId,
+        email: def.email,
+        password: def.defaultPassword,
+        badge: def.badge,
+        badgeColor: def.badgeColor,
+        details,
+        collegeName,
+        icon: def.icon,
+        shri_score: user?.shri_score ?? 600,
+        batua_locked: user?.batua_locked ?? 0,
+        batua_unlocked: user?.batua_unlocked ?? 0,
+        tijori: user?.tijori ?? 0,
+      };
+    });
+
+    res.json(demoAccounts);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.post('/signup', authLimiter, async (req, res, next) => {
   try {
@@ -249,9 +332,10 @@ router.post('/verify-signup', authLimiter, async (req, res, next) => {
       store.users.push(newUser);
       session.usedAt = createdAt;
 
-      const accessToken = await issueUserSession(store, newUser, res);
+      const sessionTokens = await issueUserSession(store, newUser, res);
       return {
-        accessToken,
+        accessToken: sessionTokens.accessToken,
+        refreshToken: sessionTokens.refreshToken,
         user: sanitiseUser(newUser),
       };
     });
@@ -275,9 +359,10 @@ router.post('/login', authLimiter, async (req, res, next) => {
       const passwordMatches = await verifyPassword(payload.password, user.password_hash);
       assert(passwordMatches, 401, 'Invalid email or password');
 
-      const accessToken = await issueUserSession(store, user, res);
+      const sessionTokens = await issueUserSession(store, user, res);
       return {
-        accessToken,
+        accessToken: sessionTokens.accessToken,
+        refreshToken: sessionTokens.refreshToken,
         user: sanitiseUser(user),
       };
     });
@@ -290,7 +375,10 @@ router.post('/login', authLimiter, async (req, res, next) => {
 
 router.post('/refresh', async (req, res, next) => {
   try {
-    const refreshToken = req.cookies.refresh_token;
+    const refreshToken =
+      req.cookies?.refresh_token ||
+      req.body?.refreshToken ||
+      req.headers['x-refresh-token'];
     assert(refreshToken, 401, 'Refresh token missing');
 
     const payload = verifyRefreshToken(refreshToken);
@@ -310,8 +398,12 @@ router.post('/refresh', async (req, res, next) => {
       const user = store.users.find((entry) => entry.id === Number(payload.sub));
       assert(user, 401, 'User not found');
 
-      const accessToken = await issueUserSession(store, user, res);
-      return { accessToken, user: sanitiseUser(user) };
+      const sessionTokens = await issueUserSession(store, user, res);
+      return {
+        accessToken: sessionTokens.accessToken,
+        refreshToken: sessionTokens.refreshToken,
+        user: sanitiseUser(user),
+      };
     });
 
     res.json(result);
@@ -323,15 +415,22 @@ router.post('/refresh', async (req, res, next) => {
 
 router.post('/logout', async (req, res, next) => {
   try {
-    const refreshToken = req.cookies.refresh_token;
+    const refreshToken =
+      req.cookies?.refresh_token ||
+      req.body?.refreshToken ||
+      req.headers['x-refresh-token'];
     if (refreshToken) {
-      const payload = verifyRefreshToken(refreshToken);
-      await mutateStore(async (store) => {
-        const session = store.refreshTokens.find((entry) => entry.tokenId === payload.jti);
-        if (session && !session.revokedAt) {
-          session.revokedAt = new Date().toISOString();
-        }
-      });
+      try {
+        const payload = verifyRefreshToken(refreshToken);
+        await mutateStore(async (store) => {
+          const session = store.refreshTokens.find((entry) => entry.tokenId === payload.jti);
+          if (session && !session.revokedAt) {
+            session.revokedAt = new Date().toISOString();
+          }
+        });
+      } catch {
+        // Token might already be expired or invalid, continue clearing cookies
+      }
     }
     clearRefreshCookie(res);
     res.json({ ok: true });
