@@ -19,6 +19,7 @@ import {
   TrendingUp,
   Unlock,
   Users,
+  Wallet,
 } from 'lucide-react';
 
 import Layout from '../components/Layout';
@@ -379,6 +380,15 @@ export default function StudentDashboard() {
                 <span>Lending</span>
               </button>
             </div>
+
+            {/* Direct Wallet Hub Link */}
+            <Link
+              to="/wallet"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white text-xs font-bold shadow-xs hover:opacity-95 transition"
+            >
+              <Wallet className="w-3.5 h-3.5" />
+              <span>Wallet Dashboard</span>
+            </Link>
           </div>
         </div>
 

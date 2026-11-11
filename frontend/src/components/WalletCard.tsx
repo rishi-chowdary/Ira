@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   ArrowLeftRight,
   Check,
@@ -96,29 +97,38 @@ export default function WalletCard({ locked, unlocked, tijori, onSyncComplete }:
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => {
-            if (isRebalancing && (lockedAmount !== locked || unlockedAmount !== unlocked)) {
-              saveAllocationToDatabase();
-            } else {
-              setIsRebalancing(!isRebalancing);
-            }
-          }}
-          disabled={isSyncing}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-            isRebalancing
-              ? 'bg-blue-600 text-white shadow-sm hover:bg-blue-700'
-              : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-          }`}
-        >
-          {isSyncing ? (
-            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-          ) : (
-            <Sliders className="w-3.5 h-3.5" />
-          )}
-          <span>{isSyncing ? 'Syncing...' : isRebalancing ? 'Save & Sync' : 'Rebalance'}</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <Link
+            to="/wallet"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xs hover:from-blue-700 hover:to-indigo-700 transition"
+          >
+            <Wallet className="w-3.5 h-3.5" />
+            <span>Manage Wallet</span>
+          </Link>
+          <button
+            type="button"
+            onClick={() => {
+              if (isRebalancing && (lockedAmount !== locked || unlockedAmount !== unlocked)) {
+                saveAllocationToDatabase();
+              } else {
+                setIsRebalancing(!isRebalancing);
+              }
+            }}
+            disabled={isSyncing}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              isRebalancing
+                ? 'bg-blue-600 text-white shadow-sm hover:bg-blue-700'
+                : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+            }`}
+          >
+            {isSyncing ? (
+              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Sliders className="w-3.5 h-3.5" />
+            )}
+            <span>{isSyncing ? 'Syncing...' : isRebalancing ? 'Save & Sync' : 'Rebalance'}</span>
+          </button>
+        </div>
       </div>
 
       {syncError && (

@@ -22,6 +22,7 @@ import friendsRoutes from './routes/friends.js';
 import statsRoutes from './routes/stats.js';
 import transactionRoutes from './routes/transactions.js';
 import userRoutes from './routes/users.js';
+import walletRoutes from './routes/wallet.js';
 
 dotenv.config();
 
@@ -85,6 +86,7 @@ app.use('/api/friends', friendsRoutes);
 app.use('/api/private-loans', privateLoanRoutes);
 app.use('/api/notifications', notificationsRoutes);
 app.use('/api/stats', statsRoutes);
+app.use('/api/wallet', walletRoutes);
 
 app.get('/api/colleges', async (req, res, next) => {
   try {

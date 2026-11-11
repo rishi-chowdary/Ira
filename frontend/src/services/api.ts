@@ -451,4 +451,52 @@ export const apiClient = {
       body: payload,
     });
   },
+
+  getWalletBalance(token: string) {
+    return request<{
+      batua_locked: number;
+      batua_unlocked: number;
+      tijori: number;
+      total: number;
+      mock_upi_balance: number;
+      is_activated: boolean;
+    }>('/api/wallet/balance', { token });
+  },
+
+  addMoney(token: string, payload: { amount: number; upi_id: string }) {
+    return request<{ ok: boolean; transaction: Transaction }>('/api/wallet/add-money', {
+      method: 'POST',
+      token,
+      body: payload,
+    });
+  },
+
+  transferWallet(token: string, payload: { from_wallet: string; to_wallet: string; amount: number }) {
+    return request<{ ok: boolean }>('/api/wallet/transfer', {
+      method: 'POST',
+      token,
+      body: payload,
+    });
+  },
+
+  withdrawWallet(token: string, payload: { amount: number; from_wallet: string; upi_id: string }) {
+    return request<{ ok: boolean; transaction: Transaction }>('/api/wallet/withdraw', {
+      method: 'POST',
+      token,
+      body: payload,
+    });
+  },
+
+  upiAutopay(token: string, payload: { amount: number }) {
+    return request<{ ok: boolean }>('/api/wallet/upi-autopay', {
+      method: 'POST',
+      token,
+      body: payload,
+    });
+  },
+
+  getWalletTransactions(token: string, params?: { wallet?: string; type?: string; range?: string }) {
+    const qs = params ? '?' + new URLSearchParams(params as Record<string, string>).toString() : '';
+    return request<Transaction[]>(`/api/wallet/transactions${qs}`, { token });
+  },
 };

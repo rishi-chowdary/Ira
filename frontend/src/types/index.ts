@@ -16,6 +16,7 @@ export interface User {
   batua_locked: number;
   batua_unlocked: number;
   tijori: number;
+  mock_upi_balance?: number;
   role: 'admin' | 'college_admin' | 'both' | 'borrower' | 'lender';
   kyc_status: 'pending' | 'verified';
   college_verified: boolean;

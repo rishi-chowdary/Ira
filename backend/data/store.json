@@ -7,17 +7,17 @@
       "users": 8,
       "loans": 9,
       "investments": 12,
-      "transactions": 38,
+      "transactions": 39,
       "adminAuditLog": 1,
-      "refreshTokens": 45,
+      "refreshTokens": 48,
       "otpSessions": 1,
       "friends": 1,
       "privateLoans": 1,
       "notifications": 28,
       "messages": 1
     },
-    "createdAt": "2026-11-11T09:06:01.975Z",
-    "updatedAt": "2026-11-11T10:29:47.473Z"
+    "createdAt": "2026-11-11T11:48:30.425Z",
+    "updatedAt": "2026-11-11T11:51:16.811Z"
   },
   "states": [
     {
@@ -285,8 +285,8 @@
       "upi_id": "vihaan@upi",
       "college_email": "vihaan.singh@symbiosis.edu",
       "shri_score": 820,
-      "batua_locked": 450,
-      "batua_unlocked": 50,
+      "batua_locked": 305,
+      "batua_unlocked": 195,
       "tijori": 4830.8,
       "role": "both",
       "kyc_status": "verified",
@@ -313,7 +313,7 @@
       "aadhaar_hash": null,
       "pan_hash": null,
       "created_at": "2026-05-10T14:16:59.638Z",
-      "updated_at": "2026-11-11T09:06:01.479Z"
+      "updated_at": "2026-11-11T11:34:25.284Z"
     },
     {
       "id": 5,
@@ -1142,6 +1142,15 @@
       "balance_after": 50,
       "description": "Batua reallocated: ₹450.00 locked, ₹50.00 unlocked",
       "created_at": "2026-11-11T09:05:45.676Z"
+    },
+    {
+      "id": 38,
+      "user_id": 4,
+      "type": "wallet_rebalance",
+      "amount": 305,
+      "balance_after": 195,
+      "description": "Batua reallocated: ₹305.00 locked, ₹195.00 unlocked",
+      "created_at": "2026-11-11T11:34:25.284Z"
     }
   ],
   "notifications": [
@@ -1445,6 +1454,30 @@
       "subjectId": 4,
       "revokedAt": null,
       "createdAt": "2026-11-11T10:29:47.456Z"
+    },
+    {
+      "id": 45,
+      "tokenId": "ec301688-23f9-40b5-b455-2b8b25d74145",
+      "subjectType": "user",
+      "subjectId": 4,
+      "revokedAt": "2026-11-11T11:51:16.806Z",
+      "createdAt": "2026-11-11T11:32:59.546Z"
+    },
+    {
+      "id": 46,
+      "tokenId": "68f329f7-30c3-42a8-ace7-06658278e037",
+      "subjectType": "user",
+      "subjectId": 3,
+      "revokedAt": null,
+      "createdAt": "2026-11-11T11:48:29.920Z"
+    },
+    {
+      "id": 47,
+      "tokenId": "c8d1683b-4262-47b7-9b27-148c3eaafbea",
+      "subjectType": "user",
+      "subjectId": 4,
+      "revokedAt": null,
+      "createdAt": "2026-11-11T11:51:16.811Z"
     }
   ],
   "otpSessions": [],

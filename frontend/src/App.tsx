@@ -15,6 +15,7 @@ import ProfilePage from './pages/ProfilePage';
 import SignUpPage from './pages/SignUpPage';
 import StudentDashboard from './pages/StudentDashboard';
 import TransactionHistoryPage from './pages/TransactionHistoryPage';
+import WalletPage from './pages/WalletPage';
 
 export default function App() {
   return (
@@ -86,6 +87,14 @@ export default function App() {
             element={
               <ProtectedRoute mode="user">
                 <TransactionHistoryPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/wallet"
+            element={
+              <ProtectedRoute mode="user">
+                <WalletPage />
               </ProtectedRoute>
             }
           />

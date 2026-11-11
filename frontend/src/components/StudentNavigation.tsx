@@ -8,6 +8,7 @@ import {
   ShieldCheck,
   User,
   Users,
+  Wallet,
 } from 'lucide-react';
 
 import { useAuth } from '../contexts/AuthContext';
@@ -45,6 +46,7 @@ export default function StudentNavigation() {
 
   const navItems: NavItem[] = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'Batua & Tijori', path: '/wallet', icon: Wallet },
     { name: 'Guarantors', path: '/guarantors', icon: ShieldCheck },
     { name: 'Transactions', path: '/transaction-history', icon: History },
     { name: 'Friends Network', path: '/friends', icon: Users },
